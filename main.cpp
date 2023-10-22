@@ -9,6 +9,8 @@ int COUNT_DOWN = 10;    /* Sim time: Total number of bumper car rides */
 
 int main()
 {
+    // Use current time as seed for random generator
+    srand(time(0));
     return 0;
 }
 
@@ -26,9 +28,6 @@ void Rider(int rid)
     while (true)
     {
         // wander around for a random amount of time
-
-        // Use current time as seed for random generator
-        srand(time(0));
         Wander(rid, rand() % TIME_WANDER + 1); // + 1 because rand() ranges [0, N-1]
         GetInLine(rid);
         TakeASeat(rid);
@@ -56,13 +55,18 @@ void Wander(int rid, int interval)
     // TODO
 }
 
+void Bump(int cid, int rand)
+{
+    // TODO
+}
+
 // Bumper car thread. cid is a number between 1 to NUMBER_OF_CARS.
 void Car(int cid)
 {
     while (true)
     {
         Load(cid);
-        Bump(cid, random() % TIME_BUMP);
+        Bump(cid, rand() % TIME_BUMP + 1); // + 1 because rand() ranges [0, N-1]
         Unload(cid);
         // TODO decrease the COUNT_DOWN
         // TODO: check for the condition to exit the while loop
@@ -71,8 +75,8 @@ void Car(int cid)
 void Load(int cid)
 {
     // TODO this_guy = WaitArea[LineHead];
-    LineHead++;
-    std::cout << "Car " << rid << " takes the rider " << this_guy << ".\n";
+    // TODO SHARED VARIABLE LineHead++;
+    std::cout << "Car " << cid << " takes the rider "; // TODO define: << this_guy << ".\n";
     // TODO
 }
 
@@ -90,15 +94,15 @@ void Display(int dummy)
     {
         std::cout << "The current situation in the park is:\n";
         for (int i = 0; i < NUMBER_OF_CARS; ++i)
-            if (Car[i] is running)
+            if (dummy) // TODO (Car[i] is running)
                 std::cout << "Car i is running. The rider is ???";
             else
                 std::cout << "Car i is not running.";
 
-        for (i = 1 to N_RIDERS)
-            if (Rider[i] is wandering)
+        for (int i = 0; i < NUMBER_OF_RIDERS; ++i)
+            if (dummy) // TODO (Rider[i] is wandering)
                 std::cout << "Rider i is wandering";
-            else if (Rider[i] is waiting in line)
+            else if (dummy) // TODO (Rider[i] is waiting in line)
                 std::cout << "Rider i is waiting in line";
             else
                 std::cout << "Rider i is in a car.";
