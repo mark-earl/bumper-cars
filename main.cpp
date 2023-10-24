@@ -1,25 +1,19 @@
+// Libraries
 #include <iostream>
 #include <time.h>
 
-#define NUMBER_OF_CARS 2
-#define NUMBER_OF_RIDERS 5
-#define TIME_WANDER 100 /* each wandering time is between 0 to TIME_WANDER */
-#define TIME_BUMP 40    /* each bumping time is between 0 to TIME_BUMP */
-int COUNT_DOWN = 10;    /* Sim time: Total number of bumper car rides */
+// Constants
+#define NUMBER_OF_CARS 2   // Number of bumper cars
+#define NUMBER_OF_RIDERS 5 // Number of riders
+#define TIME_WANDER 100    // Each wandering time is between 0 to TIME_WANDER
+#define TIME_BUMP 40       // Each bumping time is between 0 to TIME_BUMP */
+int NUMBER_OF_RIDES = 10;  // Total number of bumper car rides (control length of execution)
 
 int main()
 {
     // Use current time as seed for random generator
     srand(time(0));
     return 0;
-}
-
-int done()
-{
-    if (COUNT_DOWN == 0)
-        return true;
-    else
-        return false;
 }
 
 // Rider thread. rid is a number between 1 to NUMBER_OF_RIDERS.
@@ -43,6 +37,7 @@ void GetInLine(int rid)
 void TakeASeat(int rid)
 {
     // TODO
+    std::cout << "Rider " << rid << " takes a seat.\n";
 }
 void TakeARide(int rid)
 {
@@ -68,7 +63,7 @@ void Car(int cid)
         Load(cid);
         Bump(cid, rand() % TIME_BUMP + 1); // + 1 because rand() ranges [0, N-1]
         Unload(cid);
-        // TODO decrease the COUNT_DOWN
+        // TODO decrease the NUMBER_OF_RIDES
         // TODO: check for the condition to exit the while loop
     }
 }
@@ -90,7 +85,7 @@ void Unload(int cid)
 // Displaying thread
 void Display(int dummy)
 {
-    while (!done())
+    while (NUMBER_OF_RIDES > 0)
     {
         std::cout << "The current situation in the park is:\n";
         for (int i = 0; i < NUMBER_OF_CARS; ++i)
