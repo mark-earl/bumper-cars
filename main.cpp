@@ -54,13 +54,31 @@ int main() {
 
     // Create threads for all riders
     for (int i = 0; i < NUMBER_OF_RIDERS; ++i) {
-        pthread_create(&riderThreads[i], NULL, riders[i].enjoyPark, NULL);
+        pthread_create(&riderThreads[i], NULL, riders[i].enjoyPark, this);
     }
 
     // Create threads for all cars
     for (int i = 0; i < NUMBER_OF_CARS; ++i) {
-        pthread_create(&carThreads[i], NULL, cars[i].ride, NULL);
+        pthread_create(&carThreads[i], NULL, cars[i].ride, this);
     }
+
+    // TODO: MAIN DISPLAY THREAD
+    // while (!finish()) {
+    //     printf("The current situation in the park is:\n");
+    //     for (i=1 to N_CARS)
+    //         if (Car[i] is running)
+    //             std::cout << "Car i is running. The rider is ???\n"
+    //         else
+    //             std::cout << "Car i is not running.\n"
+
+    //     for (i=1 to N_RIDERS)
+    //         if (Rider[i] is wandering)
+    //             std::cout << "Rider i is wandering.\n"
+    //         else if (Rider[i] is waiting in line)
+    //             std::cout << "Rider i is waiting in line.\n"
+    //         else
+    //             std::cout << "Rider i is in a car.\n"
+    // }
 
     // Join all rider threads to ensure they finish before exiting.
     for (auto& riderThread : riderThreads) {

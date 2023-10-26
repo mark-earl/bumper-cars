@@ -4,7 +4,7 @@
 class Rider {
 public:
     Rider(int riderID);
-    static void* enjoyPark(void* rider);
+    void* enjoyPark(void* rider);
     void leavePark();
 
 private:

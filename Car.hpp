@@ -4,7 +4,7 @@
 class Car {
 public:
     Car(int carID);
-    static void* ride(void* car);
+    void* ride(void* car);
 
 private:
     int cid = -1;

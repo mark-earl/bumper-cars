@@ -46,13 +46,9 @@ void Car::Load(int riderID) {
     // Wait for an available slot in the car (using the 'riding' semaphore)
     sem_wait(&riding);
 
-    // Lock the 'mutex' to ensure safe access to the 'currentRiderID' variable
+    // Use 'mutex' to ensure safe access to the 'currentRiderID' variable
     sem_wait(&mutex);
-
-    // Assign the rider to the car
     currentRiderID = riderID;
-
-    // Release the 'mutex'
     sem_post(&mutex);
 
     std::cout << "Car " << cid << " takes rider: " << currentRiderID << ".\n";
