@@ -9,8 +9,8 @@
 // Each wandering time is between 0 to TIME_WANDER
 #define TIME_WANDER 20
 
-Rider::Rider(int rid){
-    this->rid = rid;
+Rider::Rider(int riderID){
+    rid = riderID;
     pthread_create(&riderThread, NULL, enjoyPark, this);
 }
 

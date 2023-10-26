@@ -5,7 +5,7 @@
 
 class Rider {
 public:
-    Rider(int rid);
+    Rider(int riderID);
     void leavePark();
     pthread_t getRiderThread() {
         return riderThread;

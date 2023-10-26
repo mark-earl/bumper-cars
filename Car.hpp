@@ -13,11 +13,11 @@ public:
 
 private:
     int cid;
-    Rider rider = NULL;
+    int currentRiderID = -1;
     pthread_t carThread;
 
     void Bump();
-    void Load();
+    void Load(Rider rider);
     void Unload();
 
     static void* ride(void* car);

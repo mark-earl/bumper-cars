@@ -10,9 +10,7 @@
 #define TIME_BUMP 10
 
 Car::Car(int cid) {
-
     this->cid = cid;
-    pthread_create(&carThread, NULL, ride, this);
 }
 
 void* Car::ride(void* car) {
@@ -35,18 +33,19 @@ void* Car::ride(void* car) {
 
 void Car::Bump() {
     sleep(rand() % TIME_BUMP + 1); // +1 because rand() ranges [0, N-1]
-    std::cout << "Rider: " << rider.getRID() << " just bumped\n";
+    std::cout << "Rider: " << currentRiderID << " just bumped\n";
 }
 
-void Car::Load() {
+void Car::Load(Rider rider) {
     sem_wait(&waitingForRide);  // Wait for a rider to get in line
     sem_wait(&waitingLineMutex); // Protect access to the waiting line
 
     // Logic to select and assign a rider to the car
-    for (int i = 0; i < waitingRiders.size(); ++i) {
+    for (int i = 0; i < int(waitingRiders.size()); ++i) {
         if (waitingRiders[i].assignedCar == -1) {
             waitingRiders[i].assignedCar = cid;
             rider = waitingRiders[i];
+            currentRiderID = rider.getRID();
             waitingRiders.erase(waitingRiders.begin() + i);
             break;
         }
@@ -54,7 +53,7 @@ void Car::Load() {
 
     sem_post(&waitingLineMutex); // Release the waiting line mutex
 
-    std::cout << "Car " << cid << " takes rider: " << rider.getRID() << ".\n";
+    std::cout << "Car " << cid << " takes rider: " << currentRiderID << ".\n";
 }
 
 void Car::Unload() {

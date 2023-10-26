@@ -1,6 +1,7 @@
 #include <iostream>
 #include <thread>
 #include <vector>
+#include <map>
 #include <semaphore.h>
 #include "Car.hpp"
 #include "Rider.hpp"
@@ -10,11 +11,11 @@
 int NUMBER_OF_RIDES = 10;
 
 // Waiting line to hold the riders
-std::vector<Rider> waitingRiders;
+std::vector<Rider> waitingRiders(NUMBER_OF_RIDERS);
 
-sem_t waitingForRide;     // Semaphore to track empty slots in the buffer
-sem_t riding;  // Semaphore to track occupied slots in the buffer
-sem_t waitingLineMutex;    // Mutex to protect buffer access
+sem_t waitingForRide;   // Semaphore to track empty slots in the waiting line
+sem_t riding;           // Semaphore to track occupied cars
+sem_t waitingLineMutex; // Mutex to protect buffer access to the waiting line
 
 int main() {
     // Initialize semaphores and other necessary resources
@@ -22,41 +23,28 @@ int main() {
     sem_init(&riding, 0, NUMBER_OF_CARS);
     sem_init(&waitingLineMutex, 0, 1);
 
-    // Create car instances and rider instances
-    std::vector<Car> cars;
-    std::vector<Rider> riders;
-
-    // Set cid from [1, NUMBER_OF_CARS]
-    for (int i = 1; i <= NUMBER_OF_CARS; ++i) {
-        cars.push_back(Car(i));
-    }
+    // Containers to hold riders and cars
+    std::vector<std::map<Rider, pthread_t>> riders;
+    std::vector<std::map<Car, pthread_t>> cars;
 
     // Set rid from [1, NUMBER_OF_RIDERS]
     for (int i = 1; i <= NUMBER_OF_RIDERS; ++i) {
         riders.push_back(Rider(i));
     }
 
-    // Run the simulation for a specified number of rides
-    while (NUMBER_OF_RIDES > 0) {
-        // Logic for the simulation:
-        // 1. Allow cars to pick up riders when they're available.
-        // 2. Riders get in line, take a seat, and enjoy the ride.
-        // 3. Update ride counts and exit conditions.
-
-        // Reduce NUMBER_OF_RIDES when a ride is completed
-        // Check for your exit condition here
-
-        // For example, you might implement a simple exit condition as follows:
-        if (NUMBER_OF_RIDES == 0) {
-            break; // All rides are completed
-        }
+    // Set cid from [1, NUMBER_OF_CARS]
+    for (int i = 1; i <= NUMBER_OF_CARS; ++i) {
+        cars.push_back(Car(i));
     }
 
-    // At this point, all rides are completed. Perform cleanup and join threads.
+    // Create rider threads
+    for (Car& car: cars) {
+        pthread_create(car.getCarThread(), )
+    }
 
-    // Set done flags for all riders to signal them to leave the park.
-    for (Rider& rider : riders) {
-        rider.leavePark();
+    // Create car threads
+    for (Car& car: cars) {
+        // TODO
     }
 
     // Join all rider threads to ensure they finish before exiting.
