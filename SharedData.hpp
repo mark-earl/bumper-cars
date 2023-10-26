@@ -3,13 +3,12 @@
 #define SHAREDDATA_HPP
 
 #include <semaphore.h>
-#include "Rider.hpp"
 #include <queue>
+#include "Rider.hpp"
 
-extern int NUMBER_OF_RIDES;
 extern sem_t waitingForRide;
 extern sem_t riding;
-extern sem_t waitingLineMutex;
+extern sem_t mutex;
 extern std::queue<Rider> waitingRiders;
 
 #endif // SHAREDDATA_HPP

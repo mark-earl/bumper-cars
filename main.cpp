@@ -8,24 +8,23 @@
 
 #define NUMBER_OF_CARS 2
 #define NUMBER_OF_RIDERS 5
-int NUMBER_OF_RIDES = 10;
 
 // Waiting line to hold the riders
 std::queue<Rider> waitingRiders;
 
 sem_t waitingForRide;   // Semaphore to track empty slots in the waiting line
 sem_t riding;           // Semaphore to track occupied cars
-sem_t waitingLineMutex; // Mutex to protect buffer access to the waiting line
+sem_t mutex;
 
 int main() {
     // Initialize semaphores and other necessary resources
     sem_init(&waitingForRide, 0, NUMBER_OF_RIDERS);
     sem_init(&riding, 0, NUMBER_OF_CARS);
-    sem_init(&waitingLineMutex, 0, 1);
+    sem_init(&mutex, 0, 1);
 
     // Containers to hold riders and cars
-    std::vector<Rider> riders(NUMBER_OF_RIDERS);
-    std::vector<Car> cars(NUMBER_OF_CARS);
+    std::vector<Rider> riders;
+    std::vector<Car> cars;
 
     // Containers to hold rider and car threads
     std::vector<pthread_t> riderThreads;
@@ -76,7 +75,7 @@ int main() {
     // Destroy semaphores and release resources.
     sem_destroy(&waitingForRide);
     sem_destroy(&riding);
-    sem_destroy(&waitingLineMutex);
+    sem_destroy(&mutex);
 
     return 0;
 }

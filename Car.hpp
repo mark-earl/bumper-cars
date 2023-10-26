@@ -1,9 +1,6 @@
 #ifndef CAR_HPP
 #define CAR_HPP
 
-#include <pthread.h>
-#include "Rider.hpp"
-
 class Car {
 public:
     Car(int carID);

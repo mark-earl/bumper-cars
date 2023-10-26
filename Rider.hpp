@@ -1,8 +1,6 @@
 #ifndef RIDER_HPP
 #define RIDER_HPP
 
-#include <pthread.h>
-
 class Rider {
 public:
     Rider(int riderID);
@@ -19,6 +17,5 @@ private:
     void TakeASeat();
     void TakeARide();
 };
-
 
 #endif // RIDER_HPP
