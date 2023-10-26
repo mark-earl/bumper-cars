@@ -4,7 +4,6 @@
 #include <semaphore.h>
 #include <unistd.h>
 
-
 // Each wandering time is between 0 to TIME_WANDER
 #define TIME_WANDER 20
 
@@ -34,13 +33,9 @@ void Rider::leavePark() {
     done = true;
 }
 
-int Rider::getRID() {
-    return rid;
-}
-
 void Rider::GetInLine() {
-    sem_wait(&waitingForRide);
     std::cout << "Rider " << rid << " gets in the waiting line.\n";
+    sem_wait(&waitingForRide);
 }
 void Rider::TakeASeat() {
     std::cout << "Rider " << rid << " takes a seat.\n";

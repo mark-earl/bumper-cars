@@ -4,12 +4,12 @@
 
 #include <semaphore.h>
 #include "Rider.hpp"
-#include <vector>
+#include <queue>
 
+extern int NUMBER_OF_RIDES;
 extern sem_t waitingForRide;
 extern sem_t riding;
 extern sem_t waitingLineMutex;
-extern int NUMBER_OF_RIDES;
-extern std::vector<Rider> waitingRiders;
+extern std::queue<Rider> waitingRiders;
 
 #endif // SHAREDDATA_HPP

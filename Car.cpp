@@ -9,8 +9,8 @@
 // Each bumping time is between 0 to TIME_BUMP
 #define TIME_BUMP 10
 
-Car::Car(int cid) {
-    this->cid = cid;
+Car::Car(int carID) {
+    cid = carID;
 }
 
 void* Car::ride(void* car) {
@@ -18,7 +18,7 @@ void* Car::ride(void* car) {
     Car* carInstance = static_cast<Car*>(car);
 
     while (true) {
-        carInstance->Load();
+        carInstance->Load(carInstance->currentRiderID);
         carInstance->Bump();
         carInstance->Unload();
         --NUMBER_OF_RIDES;
@@ -31,29 +31,14 @@ void* Car::ride(void* car) {
     return NULL;
 }
 
-void Car::Bump() {
-    sleep(rand() % TIME_BUMP + 1); // +1 because rand() ranges [0, N-1]
-    std::cout << "Rider: " << currentRiderID << " just bumped\n";
+void Car::Load(int riderID) {
+    // TODO Logic to select and assign a rider to the car using semaphores
+    std::cout << "Car " << cid << " takes rider: " << currentRiderID << ".\n";
 }
 
-void Car::Load(Rider rider) {
-    sem_wait(&waitingForRide);  // Wait for a rider to get in line
-    sem_wait(&waitingLineMutex); // Protect access to the waiting line
-
-    // Logic to select and assign a rider to the car
-    for (int i = 0; i < int(waitingRiders.size()); ++i) {
-        if (waitingRiders[i].assignedCar == -1) {
-            waitingRiders[i].assignedCar = cid;
-            rider = waitingRiders[i];
-            currentRiderID = rider.getRID();
-            waitingRiders.erase(waitingRiders.begin() + i);
-            break;
-        }
-    }
-
-    sem_post(&waitingLineMutex); // Release the waiting line mutex
-
-    std::cout << "Car " << cid << " takes rider: " << currentRiderID << ".\n";
+void Car::Bump() {
+    sleep(rand() % TIME_BUMP + 1); // +1 because rand() ranges [0, N-1]
+    std::cout << "Rider: " << currentRiderID << " just bumped.\n";
 }
 
 void Car::Unload() {

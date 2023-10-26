@@ -6,21 +6,16 @@
 
 class Car {
 public:
-    Car(int cid);
-    pthread_t getCarThread() {
-        return carThread;
-    }
+    Car(int carID);
+    static void* ride(void* car);
 
 private:
-    int cid;
+    int cid = -1;
     int currentRiderID = -1;
-    pthread_t carThread;
 
+    void Load(int riderID);
     void Bump();
-    void Load(Rider rider);
     void Unload();
-
-    static void* ride(void* car);
 };
 
 #endif // CAR_HPP

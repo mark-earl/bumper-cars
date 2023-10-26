@@ -1,7 +1,7 @@
 #include <iostream>
 #include <thread>
 #include <vector>
-#include <map>
+#include <queue>
 #include <semaphore.h>
 #include "Car.hpp"
 #include "Rider.hpp"
@@ -11,7 +11,7 @@
 int NUMBER_OF_RIDES = 10;
 
 // Waiting line to hold the riders
-std::vector<Rider> waitingRiders(NUMBER_OF_RIDERS);
+std::queue<Rider> waitingRiders;
 
 sem_t waitingForRide;   // Semaphore to track empty slots in the waiting line
 sem_t riding;           // Semaphore to track occupied cars
@@ -27,23 +27,21 @@ int main() {
     std::vector<Rider> riders(NUMBER_OF_RIDERS);
     std::vector<Car> cars(NUMBER_OF_CARS);
 
+    // Containers to hold rider and car threads
     std::vector<pthread_t> riderThreads;
-    pthread_t rider1Thread;
-    pthread_t rider2Thread;
-    pthread_t rider3Thread;
-    pthread_t rider4Thread;
-    pthread_t rider5Thread;
-    riderThreads.push_back(rider1Thread);
-    riderThreads.push_back(rider2Thread);
-    riderThreads.push_back(rider3Thread);
-    riderThreads.push_back(rider4Thread);
-    riderThreads.push_back(rider5Thread);
-
     std::vector<pthread_t> carThreads;
-    pthread_t car1Thread;
-    pthread_t car2Thread;
-    carThreads.push_back(car1Thread);
-    carThreads.push_back(car2Thread);
+
+    // Load riderThreads
+    for (int i = 0; i < NUMBER_OF_RIDERS; ++i) {
+        pthread_t riderThread;
+        riderThreads.push_back(riderThread);
+    }
+
+    // Load carThreads
+    for (int i = 0; i < NUMBER_OF_CARS; ++i) {
+        pthread_t carThread;
+        carThreads.push_back(carThread);
+    }
 
     // Set rid from [1, NUMBER_OF_RIDERS]
     for (int i = 1; i <= NUMBER_OF_RIDERS; ++i) {
@@ -61,28 +59,18 @@ int main() {
     }
 
     // Create threads for all cars
-    for (int i = 1; i <= NUMBER_OF_CARS; ++i) {
-        cars.push_back(Car(i));
-    }
-
-    // Create rider threads
-    for (Car& car: cars) {
-        pthread_create(car.getCarThread(), )
-    }
-
-    // Create car threads
-    for (Car& car: cars) {
-        // TODO
+    for (int i = 0; i < NUMBER_OF_CARS; ++i) {
+        pthread_create(&carThreads[i], NULL, cars[i].ride, NULL);
     }
 
     // Join all rider threads to ensure they finish before exiting.
-    for (Rider& rider : riders) {
-        pthread_join(rider.getRiderThread(), NULL);
+    for (auto& riderThread : riderThreads) {
+        pthread_join(riderThread, NULL);
     }
 
-    // Join car threads (optional if your Car class uses pthreads).
-    for (Car& car : cars) {
-        pthread_join(car.getCarThread(), NULL);
+    // Create threads for all cars
+    for (auto& carThread : carThreads) {
+        pthread_join(carThread, NULL);
     }
 
     // Destroy semaphores and release resources.
