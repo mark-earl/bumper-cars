@@ -2,7 +2,6 @@
 #include "SharedData.hpp"
 #include <iostream>
 #include <semaphore.h>
-#include <pthread.h>
 #include <unistd.h>
 
 
@@ -11,7 +10,6 @@
 
 Rider::Rider(int riderID){
     rid = riderID;
-    pthread_create(&riderThread, NULL, enjoyPark, this);
 }
 
 void* Rider::enjoyPark(void* rider) {

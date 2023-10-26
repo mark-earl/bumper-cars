@@ -6,10 +6,8 @@
 class Rider {
 public:
     Rider(int riderID);
+    static void* enjoyPark(void* rider);
     void leavePark();
-    pthread_t getRiderThread() {
-        return riderThread;
-    }
 
 private:
     int getRID();
@@ -20,10 +18,6 @@ private:
     bool done = false;
     int rid;
     int assignedCar; // Add this attribute to track the assigned car
-    pthread_t riderThread;
-
-    // Thread entry point
-    static void* enjoyPark(void* rider);
 
     // Allow Car access to private members of Rider
     friend class Car;

@@ -24,8 +24,26 @@ int main() {
     sem_init(&waitingLineMutex, 0, 1);
 
     // Containers to hold riders and cars
-    std::vector<std::map<Rider, pthread_t>> riders;
-    std::vector<std::map<Car, pthread_t>> cars;
+    std::vector<Rider> riders(NUMBER_OF_RIDERS);
+    std::vector<Car> cars(NUMBER_OF_CARS);
+
+    std::vector<pthread_t> riderThreads;
+    pthread_t rider1Thread;
+    pthread_t rider2Thread;
+    pthread_t rider3Thread;
+    pthread_t rider4Thread;
+    pthread_t rider5Thread;
+    riderThreads.push_back(rider1Thread);
+    riderThreads.push_back(rider2Thread);
+    riderThreads.push_back(rider3Thread);
+    riderThreads.push_back(rider4Thread);
+    riderThreads.push_back(rider5Thread);
+
+    std::vector<pthread_t> carThreads;
+    pthread_t car1Thread;
+    pthread_t car2Thread;
+    carThreads.push_back(car1Thread);
+    carThreads.push_back(car2Thread);
 
     // Set rid from [1, NUMBER_OF_RIDERS]
     for (int i = 1; i <= NUMBER_OF_RIDERS; ++i) {
@@ -33,6 +51,16 @@ int main() {
     }
 
     // Set cid from [1, NUMBER_OF_CARS]
+    for (int i = 1; i <= NUMBER_OF_CARS; ++i) {
+        cars.push_back(Car(i));
+    }
+
+    // Create threads for all riders
+    for (int i = 0; i < NUMBER_OF_RIDERS; ++i) {
+        pthread_create(&riderThreads[i], NULL, riders[i].enjoyPark, NULL);
+    }
+
+    // Create threads for all cars
     for (int i = 1; i <= NUMBER_OF_CARS; ++i) {
         cars.push_back(Car(i));
     }
