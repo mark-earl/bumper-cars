@@ -4,7 +4,8 @@
 class Car {
 public:
     Car(int carID);
-    void* ride(void* car);
+    static void* ride(void* car);
+    bool isRunning() {return running;}
 
 private:
     int cid = -1;
@@ -13,6 +14,8 @@ private:
     void Load(int riderID);
     void Bump();
     void Unload();
+
+    bool running = false;
 };
 
 #endif // CAR_HPP

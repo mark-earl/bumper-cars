@@ -4,8 +4,11 @@
 class Rider {
 public:
     Rider(int riderID);
-    void* enjoyPark(void* rider);
+    static void* enjoyPark(void* rider);
     void leavePark();
+
+    bool isWandering() { return wandering; }
+    bool isWaiting() { return waiting; }
 
 private:
     int rid = -1;
@@ -16,6 +19,9 @@ private:
     void GetInLine();
     void TakeASeat();
     void TakeARide();
+
+    bool wandering = false;
+    bool waiting = false;
 };
 
 #endif // RIDER_HPP

@@ -1,0 +1,1 @@
+int NUMBER_OF_RIDES = 2;

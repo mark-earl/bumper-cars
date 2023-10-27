@@ -5,8 +5,6 @@
 #include <unistd.h>
 #include <cstdlib>
 
-int NUMBER_OF_RIDES = 10;
-
 // Each bumping time is between 0 to TIME_BUMP
 #define TIME_BUMP 10
 
@@ -21,47 +19,58 @@ void* Car::ride(void* car) {
     while (true) {
 
         // Bumper Car Ride
-        carInstance->Load(carInstance->currentRiderID);
+        sem_wait(&waitingForRideMutex);
+        if (!waitingRiderIDs.empty()) {
+            carInstance->Load(waitingRiderIDs.front());
+            waitingRiderIDs.pop();
+            sem_post(&waitingForRideMutex);
+            sem_post(&waitingForRide);
+        }
+
+        else {
+            sem_post(&waitingForRideMutex);
+            continue; // No riders in line, continue to next iteration
+        }
+
         carInstance->Bump();
         carInstance->Unload();
+        sem_post(&riding);
 
-        // Decrement number of rides (protected)
-        sem_wait(&mutex);
-        --NUMBER_OF_RIDES;
-        sem_post(&mutex);
-
-        // Check for the condition to exit the while loop
-        if (NUMBER_OF_RIDES > 0)
-            continue;
-        else if (NUMBER_OF_RIDES == 0)
-            break;
-        else if (NUMBER_OF_RIDES < 0)
-            std::cerr << "ERROR: More riders let ride than allowed!\n";
     }
 
     return NULL;
 }
 
 void Car::Load(int riderID) {
-    // Wait for an available slot in the car (using the 'riding' semaphore)
-    sem_wait(&riding);
+
+    running = true;
 
     // Use 'mutex' to ensure safe access to the 'currentRiderID' variable
-    sem_wait(&mutex);
+    sem_wait(&riderIDMutex);
     currentRiderID = riderID;
-    sem_post(&mutex);
+    sem_post(&riderIDMutex);
 
-    std::cout << "Car " << cid << " takes rider: " << currentRiderID << ".\n";
+    sem_wait(&outputMutex);
+    std::cout << "Car " << cid << " takes Rider " << currentRiderID << ".\n";
+    sem_post(&outputMutex);
 }
 
 
 void Car::Bump() {
+
     sleep(rand() % TIME_BUMP + 1); // +1 because rand() ranges [0, N-1]
-    std::cout << "Rider: " << currentRiderID << " just bumped.\n";
+
+    sem_wait(&outputMutex);
+    std::cout << "Car " << cid << " with Rider " << currentRiderID << " just bumped.\n";
+    sem_post(&outputMutex);
 }
 
 void Car::Unload() {
-    sem_post(&riding);
-    std::cout << "This ride of Car " << cid << " with Rider " << currentRiderID << " is over.\n";
+
+    running = false;
+
+    sem_wait(&outputMutex);
+    std::cout << "Car " << cid << " ride with Rider " << currentRiderID << " is over.\n";
+    sem_post(&outputMutex);
     currentRiderID = -1;
 }
