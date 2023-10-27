@@ -6,8 +6,9 @@
 #include "Car.hpp"
 #include "Rider.hpp"
 
-#define NUMBER_OF_CARS 2
-#define NUMBER_OF_RIDERS 5
+#define NUMBER_OF_CARS 8
+#define NUMBER_OF_RIDERS 8
+int NUMBER_OF_RIDES = 8;
 
 // Waiting line to hold the riders
 std::queue<Rider> waitingRiders;
@@ -30,6 +31,9 @@ sem_t riding;              // Prevent riders from wandering when the ride is not
 void* display(void *);
 
 int main() {
+
+    std::cout << "The park is now OPEN.\n\n";
+
     // Initialize semaphores and other necessary resources
     sem_init(&outputMutex, 0, 1);
     sem_init(&numberOfRidesMutex, 0, 1);
@@ -40,20 +44,8 @@ int main() {
     sem_init(&riding, 0, 0);
 
     // Containers to hold rider and car threads
-    std::vector<pthread_t> riderThreads;
-    std::vector<pthread_t> carThreads;
-
-    // Load riderThreads
-    for (int i = 0; i < NUMBER_OF_RIDERS; ++i) {
-        pthread_t riderThread;
-        riderThreads.push_back(riderThread);
-    }
-
-    // Load carThreads
-    for (int i = 0; i < NUMBER_OF_CARS; ++i) {
-        pthread_t carThread;
-        carThreads.push_back(carThread);
-    }
+    std::vector<pthread_t> riderThreads(NUMBER_OF_RIDERS);
+    std::vector<pthread_t> carThreads(NUMBER_OF_CARS);
 
     // Set rid from [1, NUMBER_OF_RIDERS]
     for (int i = 1; i <= NUMBER_OF_RIDERS; ++i) {
@@ -84,17 +76,20 @@ int main() {
         pthread_join(riderThread, NULL);
     }
 
-    // Create threads for all cars
+    // Manually stop the car threads once the riders leave the park
     for (auto& carThread : carThreads) {
-        pthread_join(carThread, NULL);
+        pthread_cancel(carThread);
     }
 
     // Destroy semaphores and release resources.
     sem_destroy(&outputMutex);
     sem_destroy(&numberOfRidesMutex);
+    sem_destroy(&riderIDMutex);
     sem_destroy(&waitingForRideMutex);
     sem_destroy(&waitingForRide);
     sem_destroy(&riding);
+
+    std::cout << "\nThe park is now CLOSED.\n";
 
     return 0;
 }

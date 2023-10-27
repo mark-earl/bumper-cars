@@ -2,7 +2,7 @@ CXX = g++
 CXXFLAGS = -std=c++11 -Wall -Wextra
 LDFLAGS = -lpthread -lstdc++
 
-SRCS = main.cpp Car.cpp Rider.cpp SharedData.cpp
+SRCS = main.cpp Car.cpp Rider.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 TARGET = bumper_cars.out

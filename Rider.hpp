@@ -13,7 +13,6 @@ public:
 private:
     int rid = -1;
     int assignedCarID = -1;
-    bool done = false;
 
     void Wander();
     void GetInLine();

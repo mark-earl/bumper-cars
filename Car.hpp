@@ -5,7 +5,7 @@ class Car {
 public:
     Car(int carID);
     static void* ride(void* car);
-    bool isRunning() {return running;}
+    bool isRunning();
 
 private:
     int cid = -1;

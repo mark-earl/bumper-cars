@@ -16,25 +16,41 @@ void* Rider::enjoyPark(void* rider) {
 
     while (true) {
 
-        riderInstance->wandering = true;
-        riderInstance->Wander();    // Wander around for a random amount of time
-        riderInstance->wandering = false;
+        sem_wait(&numberOfRidesMutex);
 
-        riderInstance->waiting = true;
-        riderInstance->GetInLine(); // Get in line for the ride
-        riderInstance->waiting = false;
+        if (NUMBER_OF_RIDES > 0) {
 
-        sem_wait(&waitingForRide);
-        riderInstance->TakeASeat(); // Take a seat in a car
-        riderInstance->TakeARide(); // Ride the ride
-        sem_wait(&riding);
+            --NUMBER_OF_RIDES;
+            sem_post(&numberOfRidesMutex);
+
+            riderInstance->wandering = true;
+            riderInstance->Wander();
+            riderInstance->wandering = false;
+
+            riderInstance->waiting = true;
+            riderInstance->GetInLine();
+            riderInstance->waiting = false;
+
+            sem_wait(&waitingForRide);
+            riderInstance->TakeASeat();
+            riderInstance->TakeARide();
+            sem_wait(&riding);
+        }
+
+        else {
+            sem_post(&numberOfRidesMutex);
+            riderInstance->leavePark();
+            break;
+        }
     }
 
     return NULL;
 }
 
 void Rider::leavePark() {
-    done = true;
+    sem_wait(&outputMutex);
+    std::cout << "Rider " << rid << " is leaving the park.\n";
+    sem_post(&outputMutex);
 }
 
 void Rider::GetInLine() {

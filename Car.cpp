@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <cstdlib>
 
-// Each bumping time is between 0 to TIME_BUMP
+// Each bump time is between 0 to TIME_BUMP
 #define TIME_BUMP 10
 
 Car::Car(int carID) {
@@ -21,6 +21,7 @@ void* Car::ride(void* car) {
         // Bumper Car Ride
         sem_wait(&waitingForRideMutex);
         if (!waitingRiderIDs.empty()) {
+            carInstance->running = true;
             carInstance->Load(waitingRiderIDs.front());
             waitingRiderIDs.pop();
             sem_post(&waitingForRideMutex);
@@ -33,19 +34,20 @@ void* Car::ride(void* car) {
         }
 
         carInstance->Bump();
+        carInstance->running = false;
         carInstance->Unload();
         sem_post(&riding);
-
     }
 
     return NULL;
 }
 
+bool Car::isRunning() {
+    return running;
+}
+
 void Car::Load(int riderID) {
 
-    running = true;
-
-    // Use 'mutex' to ensure safe access to the 'currentRiderID' variable
     sem_wait(&riderIDMutex);
     currentRiderID = riderID;
     sem_post(&riderIDMutex);
@@ -66,8 +68,6 @@ void Car::Bump() {
 }
 
 void Car::Unload() {
-
-    running = false;
 
     sem_wait(&outputMutex);
     std::cout << "Car " << cid << " ride with Rider " << currentRiderID << " is over.\n";

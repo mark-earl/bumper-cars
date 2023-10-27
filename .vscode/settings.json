@@ -45,7 +45,15 @@
         "chrono": "cpp",
         "ctime": "cpp",
         "ratio": "cpp",
-        "thread": "cpp"
+        "thread": "cpp",
+        "bit": "cpp",
+        "compare": "cpp",
+        "concepts": "cpp",
+        "map": "cpp",
+        "string_view": "cpp",
+        "numbers": "cpp",
+        "semaphore": "cpp",
+        "stop_token": "cpp"
     },
     "C_Cpp.default.compilerPath": "C:\\MinGW\\bin\\g++.exe"
 }
