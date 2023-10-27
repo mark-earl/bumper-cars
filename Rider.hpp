@@ -7,8 +7,8 @@ public:
     static void* enjoyPark(void* rider);
     void leavePark();
 
-    bool isWandering() { return wandering; }
-    bool isWaiting() { return waiting; }
+    bool isWandering();
+    bool isWaiting();
 
 private:
     int rid = -1;

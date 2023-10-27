@@ -53,6 +53,22 @@ void Rider::leavePark() {
     sem_post(&outputMutex);
 }
 
+bool Rider::isWandering() {
+    return wandering;
+}
+
+bool Rider::isWaiting() {
+    return waiting;
+}
+
+void Rider::Wander() {
+    sem_wait(&outputMutex);
+    std::cout << "Rider " << rid << " is wandering around the park.\n";
+    sem_post(&outputMutex);
+
+    sleep(rand() % TIME_WANDER + 1); // + 1 because rand() ranges [0, N-1]
+}
+
 void Rider::GetInLine() {
 
     sem_wait(&outputMutex);
@@ -64,20 +80,15 @@ void Rider::GetInLine() {
     waitingRiderIDs.push(rid);
     sem_post(&waitingForRideMutex);
 }
+
 void Rider::TakeASeat() {
     sem_wait(&outputMutex);
     std::cout << "Rider " << rid << " takes a seat.\n";
     sem_post(&outputMutex);
 }
+
 void Rider::TakeARide() {
     sem_wait(&outputMutex);
     std::cout << "Rider " << rid << " is taking the ride.\n";
     sem_post(&outputMutex);
-}
-void Rider::Wander() {
-    sem_wait(&outputMutex);
-    std::cout << "Rider " << rid << " is wandering around the park.\n";
-    sem_post(&outputMutex);
-
-    sleep(rand() % TIME_WANDER + 1); // + 1 because rand() ranges [0, N-1]
 }
