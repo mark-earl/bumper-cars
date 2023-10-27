@@ -1,3 +1,9 @@
+/*
+    @file Rider.hpp
+
+    Interface file for Rider class
+*/
+
 #ifndef RIDER_HPP
 #define RIDER_HPP
 

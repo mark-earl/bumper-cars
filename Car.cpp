@@ -1,9 +1,14 @@
+/*
+    @file Car.cpp
+
+    Implementation file for Car class
+*/
+
 #include "Car.hpp"
 #include "SharedData.hpp"
 #include <iostream>
 #include <semaphore.h>
 #include <unistd.h>
-#include <cstdlib>
 
 // Each bump time is between 0 to TIME_BUMP
 #define TIME_BUMP 10

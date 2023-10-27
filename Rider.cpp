@@ -1,3 +1,9 @@
+/*
+    @file Rider.cpp
+
+    Implementation file for Rider class
+*/
+
 #include "Rider.hpp"
 #include "SharedData.hpp"
 #include <iostream>

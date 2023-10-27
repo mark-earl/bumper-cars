@@ -1,4 +1,9 @@
-// SharedData.hpp
+/*
+    @file SharedData.hpp
+
+    Variables that are accessed by Car and/or Rider threads
+*/
+
 #ifndef SHAREDDATA_HPP
 #define SHAREDDATA_HPP
 

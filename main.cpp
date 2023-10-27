@@ -1,3 +1,9 @@
+/*
+    @file main.cpp
+
+    Simulate an amusment park that has a bumper cars ride.
+*/
+
 #include <iostream>
 #include <thread>
 #include <vector>
@@ -6,9 +12,10 @@
 #include "Car.hpp"
 #include "Rider.hpp"
 
-#define NUMBER_OF_CARS 8
-#define NUMBER_OF_RIDERS 8
-int NUMBER_OF_RIDES = 8;
+// Define behavior of the park here
+#define NUMBER_OF_CARS 2
+#define NUMBER_OF_RIDERS 5
+int NUMBER_OF_RIDES = 10;
 
 // Waiting line to hold the riders
 std::queue<Rider> waitingRiders;

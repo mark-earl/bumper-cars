@@ -1,3 +1,9 @@
+/*
+    @file Car.hpp
+
+    Interface file for Car class
+*/
+
 #ifndef CAR_HPP
 #define CAR_HPP
 
