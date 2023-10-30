@@ -26,7 +26,6 @@ void* Car::ride(void* car) {
         // Bumper Car Ride
         sem_wait(&waitingForRideMutex);
         if (!waitingRiderIDs.empty()) {
-            carInstance->running = true;
             carInstance->Load(waitingRiderIDs.front());
             waitingRiderIDs.pop();
             sem_post(&waitingForRideMutex);
@@ -39,16 +38,11 @@ void* Car::ride(void* car) {
         }
 
         carInstance->Bump();
-        carInstance->running = false;
         carInstance->Unload();
         sem_post(&riding);
     }
 
     return NULL;
-}
-
-bool Car::isRunning() {
-    return running;
 }
 
 void Car::Load(int riderID) {

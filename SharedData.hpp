@@ -19,6 +19,5 @@ extern sem_t waitingForRideMutex;
 extern sem_t waitingForRide;
 extern sem_t riding;
 extern std::queue<int> waitingRiderIDs;
-extern std::queue<Rider> waitingRiders;
 
 #endif // SHAREDDATA_HPP

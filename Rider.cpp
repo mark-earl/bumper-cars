@@ -29,17 +29,14 @@ void* Rider::enjoyPark(void* rider) {
             --NUMBER_OF_RIDES;
             sem_post(&numberOfRidesMutex);
 
-            riderInstance->wandering = true;
             riderInstance->Wander();
-            riderInstance->wandering = false;
-
-            riderInstance->waiting = true;
             riderInstance->GetInLine();
-            riderInstance->waiting = false;
 
             sem_wait(&waitingForRide);
+
             riderInstance->TakeASeat();
             riderInstance->TakeARide();
+
             sem_wait(&riding);
         }
 
@@ -57,14 +54,6 @@ void Rider::leavePark() {
     sem_wait(&outputMutex);
     std::cout << "Rider " << rid << " is leaving the park.\n";
     sem_post(&outputMutex);
-}
-
-bool Rider::isWandering() {
-    return wandering;
-}
-
-bool Rider::isWaiting() {
-    return waiting;
 }
 
 void Rider::Wander() {

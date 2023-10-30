@@ -18,7 +18,6 @@
 int NUMBER_OF_RIDES = 10;
 
 // Waiting line to hold the riders
-std::queue<Rider> waitingRiders;
 std::queue<int> waitingRiderIDs;
 
 // Containers to hold riders and cars
@@ -34,8 +33,6 @@ sem_t waitingForRideMutex; // Only one thread can push rids to the queue at a ti
 // Counting Semaphores
 sem_t waitingForRide;      // Prevent riders from loading when there is no car
 sem_t riding;              // Prevent riders from wandering when the ride is not over
-
-void* display(void *);
 
 int main() {
 
@@ -74,10 +71,6 @@ int main() {
         pthread_create(&carThreads[i], NULL, cars[i].ride, &cars[i]);
     }
 
-    // This does a ton of output
-    // pthread_t mainThread;
-    // pthread_create(&mainThread, NULL, display, NULL);
-
     // Join all rider threads to ensure they finish before exiting.
     for (auto& riderThread : riderThreads) {
         pthread_join(riderThread, NULL);
@@ -100,28 +93,3 @@ int main() {
 
     return 0;
 }
-
-void* display(void *) {
-
-    while (true) {
-        std::cout << "The current situation in the park is:\n";
-
-        for (int i = 0; i < NUMBER_OF_CARS; ++i) {
-            if (cars[i].isRunning())
-                std::cout << "Car i is running. The rider is ???\n";
-            else
-                std::cout << "Car i is not running.\n";
-        }
-
-        for (int i = 0; i < NUMBER_OF_RIDERS; ++i) {
-            if (riders[i].isWandering())
-                std::cout << "Rider i is wandering.\n";
-            else if (riders[i].isWaiting())
-                std::cout << "Rider i is waiting in line.\n";
-            else
-                std::cout << "Rider i is in a car.\n";
-        }
-    }
-
-    return NULL;
-};
