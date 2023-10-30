@@ -16,8 +16,8 @@ extern sem_t outputMutex;
 extern sem_t numberOfRidesMutex;
 extern sem_t riderIDMutex;
 extern sem_t waitingForRideMutex;
-extern sem_t waitingForRide;
-extern sem_t riding;
+extern std::vector<sem_t> waitingForRide;
+extern std::vector<sem_t> riding;
 extern std::queue<int> waitingRiderIDs;
 
 #endif // SHAREDDATA_HPP

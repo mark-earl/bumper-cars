@@ -31,8 +31,8 @@ sem_t riderIDMutex;        // Only one thread can assign a rider ID at a time
 sem_t waitingForRideMutex; // Only one thread can push rids to the queue at a time
 
 // Counting Semaphores
-sem_t waitingForRide;      // Prevent riders from loading when there is no car
-sem_t riding;              // Prevent riders from wandering when the ride is not over
+std::vector<sem_t> waitingForRide(NUMBER_OF_RIDERS);      // Prevent riders from loading when there is no car
+std::vector<sem_t> riding(NUMBER_OF_RIDERS);              // Prevent riders from wandering when the ride is not over
 
 int main() {
 
@@ -44,8 +44,10 @@ int main() {
     sem_init(&riderIDMutex, 0, 1);
     sem_init(&waitingForRideMutex, 0, 1);
 
-    sem_init(&waitingForRide, 0, 0);
-    sem_init(&riding, 0, 0);
+    for (int i = 0; i < NUMBER_OF_RIDERS; ++i) {
+        sem_init(&waitingForRide[i], 0, 0);
+        sem_init(&riding[i], 0, 0);
+    }
 
     // Containers to hold rider and car threads
     std::vector<pthread_t> riderThreads(NUMBER_OF_RIDERS);
@@ -86,8 +88,11 @@ int main() {
     sem_destroy(&numberOfRidesMutex);
     sem_destroy(&riderIDMutex);
     sem_destroy(&waitingForRideMutex);
-    sem_destroy(&waitingForRide);
-    sem_destroy(&riding);
+
+    for (int i = 0; i < NUMBER_OF_RIDERS; ++i) {
+        sem_destroy(&waitingForRide[i]);
+        sem_destroy(&riding[i]);
+    }
 
     std::cout << "\nThe park is now CLOSED.\n";
 

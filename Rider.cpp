@@ -6,12 +6,13 @@
 
 #include "Rider.hpp"
 #include "SharedData.hpp"
+#include "output.hpp"
 #include <iostream>
 #include <semaphore.h>
 #include <unistd.h>
 
 // Each wandering time is between 0 to TIME_WANDER
-#define TIME_WANDER 20
+#define TIME_WANDER 3
 
 Rider::Rider(int riderID){
     rid = riderID;
@@ -32,12 +33,12 @@ void* Rider::enjoyPark(void* rider) {
             riderInstance->Wander();
             riderInstance->GetInLine();
 
-            sem_wait(&waitingForRide);
+            sem_wait(&waitingForRide[riderInstance->rid-1]);
 
             riderInstance->TakeASeat();
             riderInstance->TakeARide();
 
-            sem_wait(&riding);
+            sem_wait(&riding[riderInstance->rid-1]);
         }
 
         else {
@@ -52,13 +53,15 @@ void* Rider::enjoyPark(void* rider) {
 
 void Rider::leavePark() {
     sem_wait(&outputMutex);
-    std::cout << "Rider " << rid << " is leaving the park.\n";
+    std::string msg = "Rider " + std::to_string(rid) + " is leaving the park.\n";
+    display(msg, rid);
     sem_post(&outputMutex);
 }
 
 void Rider::Wander() {
     sem_wait(&outputMutex);
-    std::cout << "Rider " << rid << " is wandering around the park.\n";
+    std::string msg = "Rider " + std::to_string(rid) + " is wandering around the park.\n";
+    display(msg, rid);
     sem_post(&outputMutex);
 
     sleep(rand() % TIME_WANDER + 1); // + 1 because rand() ranges [0, N-1]
@@ -67,7 +70,8 @@ void Rider::Wander() {
 void Rider::GetInLine() {
 
     sem_wait(&outputMutex);
-    std::cout << "Rider " << rid << " gets in the waiting line.\n";
+    std::string msg = "Rider " + std::to_string(rid) + " gets in the waiting line.\n";
+    display(msg, rid);
     sem_post(&outputMutex);
 
     // Add the rider's ID to the waiting queue
@@ -78,12 +82,14 @@ void Rider::GetInLine() {
 
 void Rider::TakeASeat() {
     sem_wait(&outputMutex);
-    std::cout << "Rider " << rid << " takes a seat.\n";
+    std::string msg = "Rider " + std::to_string(rid) + " takes a seat.\n";
+    display(msg, rid);
     sem_post(&outputMutex);
 }
 
 void Rider::TakeARide() {
     sem_wait(&outputMutex);
-    std::cout << "Rider " << rid << " is taking the ride.\n";
+    std::string msg = "Rider " + std::to_string(rid) + " is taking the ride.\n";
+    display(msg, rid);
     sem_post(&outputMutex);
 }

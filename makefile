@@ -8,7 +8,7 @@ CXXFLAGS = -std=c++11 -Wall -Wextra
 LDFLAGS = -lpthread
 
 # Source files
-SRCS = main.cpp Car.cpp Rider.cpp
+SRCS = main.cpp Car.cpp Rider.cpp output.cpp
 
 # Object files
 OBJS = $(SRCS:.cpp=.o)
